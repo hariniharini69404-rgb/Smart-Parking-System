@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Parking System</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #f0f0f0; }
+    h1 { color: #2a9d8f; }
+    .parking-box { background: #fff; padding: 20px; border-radius: 10px; display: inline-block; margin-top: 30px; }
+    button { padding: 10px 20px; margin: 5px; font-size: 16px; }
+    .slots { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .slot { width: 60px; height: 60px; margin: 5px; border-radius: 5px; line-height: 60px; color: #fff; font-weight: bold; }
+    .available { background: #4caf50; }
+    .occupied { background: #f44336; }
+  </style>
+</head>
+<body>
+<h1>🅿️ Smart Parking System 🅿️</h1>
+
+<div class="parking-box">
+  <p>Click on a slot to toggle Occupied/Available</p>
+  <div class="slots" id="slotsContainer"></div>
+  <p>Total Slots: <span id="totalSlots">20</span></p>
+  <p>Available: <span id="availableSlots">20</span> | Occupied: <span id="occupiedSlots">0</span></p>
+  <button onclick="resetParking()">Reset Parking</button>
+</div>
+
+<script>
+let totalSlots = 20;
+let parkingSlots = [];
+
+// Initialize parking slots
+function initParking() {
+  let container = document.getElementById("slotsContainer");
+  container.innerHTML = "";
+  parkingSlots = [];
+  for(let i=1; i<=totalSlots; i++) {
+    let slot = {id: i, status: "available"};
+    parkingSlots.push(slot);
+
+    let div = document.createElement("div");
+    div.className = "slot available";
+    div.id = "slot"+i;
+    div.innerText = i;
+    div.onclick = () => toggleSlot(i);
+    container.appendChild(div);
+  }
+  updateCounts();
+}
+
+// Toggle slot status
+function toggleSlot(slotId) {
+  let slot = parkingSlots[slotId-1];
+  let div = document.getElementById("slot"+slotId);
+  if(slot.status === "available") {
+    slot.status = "occupied";
+    div.className = "slot occupied";
+  } else {
+    slot.status = "available";
+    div.className = "slot available";
+  }
+  updateCounts();
+}
+
+// Update available/occupied count
+function updateCounts() {
+  let available = parkingSlots.filter(s => s.status==="available").length;
+  let occupied = totalSlots - available;
+  document.getElementById("availableSlots").innerText = available;
+  document.getElementById("occupiedSlots").innerText = occupied;
+}
+
+// Reset parking slots
+function resetParking() {
+  initParking();
+}
+
+// Initialize on load
+window.onload = initParking;
+</script>
+</body>
+</html>
